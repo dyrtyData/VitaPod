@@ -5,13 +5,15 @@ import { spawnSync } from "node:child_process";
 const rootArgumentIndex = process.argv.indexOf("--root");
 const root = resolve(rootArgumentIndex === -1 ? "." : process.argv[rootArgumentIndex + 1]);
 const ignoredTrackedPaths = new Set(["prover/fixtures/eligible.json", "prover/fixtures/ineligible.json"]);
-const fixtureTestPaths = ["apps/web/src/test/", "packages/shared/test/", "prover/tests/"];
+const fixtureTestPaths = ["apps/web/src/test/", "packages/shared/test/", "prover/tests/", "scripts/check-no-phi.test.mjs"];
 const forbiddenPath = /(^|\/)(\.humanlayer|\.env|[^/]*witness[^/]*|pk\.key|deployments\/.*\.json)(\/|$)/i;
 const secretPattern = /(?:DEPLOYER_PRIVATE_KEY|PRIVATE_KEY|API_KEY|SECRET|TOKEN)[ \t]*[:=][ \t]*["']?(?!["' \t]*(?:$|#))[A-Za-z0-9_./+=-]{8,}/im;
 const fixtureRecordPattern = /["']?ageYears["']?\s*[:=]\s*45\D+["']?hba1cPercent["']?\s*[:=]\s*6\.4\D+["']?egfrMlMin1_73m2["']?\s*[:=]\s*92/i;
 
 function trackedFiles() {
-  const result = spawnSync("git", ["-C", root, "ls-files", "-z"], { encoding: "utf8" });
+  const result = spawnSync("git", ["-c", `safe.directory=${root}`, "-C", root, "ls-files", "-z"], {
+    encoding: "utf8",
+  });
   if (result.status !== 0) {
     throw new Error(result.stderr.trim() || "Unable to list tracked files.");
   }
