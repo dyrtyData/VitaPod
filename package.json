@@ -20,6 +20,7 @@
     "verify:local": "python3 prover/scripts/verify.py --bundle prover/artifacts/eligible-proof.json",
     "test:prover": "python3 -m pytest prover/tests",
     "chain:deploy:local": "npm run deploy -w @vitapod/contracts -- --network localhost",
+    "chain:state:local": "npm run state -w @vitapod/contracts -- --network localhost",
     "test:contracts": "npm run test -w @vitapod/contracts"
   },
   "devDependencies": {
