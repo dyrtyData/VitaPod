@@ -16,17 +16,17 @@ policy is a deterministic synthetic-data demonstration, not a trained or medical
 | Graph | `comparisons-and` |
 | Model SHA-256 | `abeff1e803da99eddc70b206dc297558505d43a02f91ada564ce612f59ee17ec` |
 | Settings SHA-256 | `bc333e4e877104f8c349875bf38387a628bb99afbfad70b006e938560f4256c9` |
-| Verification-key SHA-256 | `cda0597cf2b390b61e8775917877e70f30e606ac61e0b8373cbb3324c345cc2a` |
+| Verification-key SHA-256 | `79075fc44b0f031a5fc8ca924a54dabfb7ee2820425e3864147110179a38fe3c` |
 
 ## Measured pipeline
 
 | Operation | Duration |
 | --- | --- |
-| Setup | 6.008 seconds |
-| Prove (eligible) | 0.790 seconds |
-| Verify (eligible) | 0.014 seconds |
-| Prove (ineligible) | 0.834 seconds |
-| Verify (ineligible) | 0.014 seconds |
+| Setup | 5.227 seconds |
+| Prove (eligible) | 4.115 seconds |
+| Verify (eligible) | 0.019 seconds |
+| Prove (ineligible) | 2.109 seconds |
+| Verify (ineligible) | 0.021 seconds |
 
 `Setup` includes model export, boundary-fixture calibration, circuit compilation, SRS
 retrieval, key generation, and Solidity verifier generation. SRS retrieval may use a cached
