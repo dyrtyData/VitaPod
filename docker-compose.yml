@@ -24,7 +24,7 @@ services:
       - "5173:5173"
   chain:
     <<: *base
-    command: npx hardhat node --hostname 0.0.0.0
+    command: npm run node -w @vitapod/contracts
     ports:
       - "8545:8545"
 

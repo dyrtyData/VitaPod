@@ -6,12 +6,13 @@ import {
 import { useState } from "react";
 import { EligibilityPreview } from "./components/EligibilityPreview.js";
 import { LocalPod } from "./components/LocalPod.js";
+import { OnChainVerification } from "./components/OnChainVerification.js";
 import { ProofBundlePanel } from "./components/ProofBundlePanel.js";
 import { ScopeNotice } from "./components/ScopeNotice.js";
 
 export default function App() {
   const [record, setRecord] = useState<SyntheticLabRecord | null>(null);
-  const [, setBundle] = useState<ProofBundleType | null>(null);
+  const [bundle, setBundle] = useState<ProofBundleType | null>(null);
   const [error, setError] = useState<string | null>(null);
   const preview = record ? evaluateDemoPolicy(record) : null;
 
@@ -38,9 +39,7 @@ export default function App() {
         </article>
         <article className="privacy-card privacy-card--chain">
           <header><span>03</span><h2>Public chain metadata</h2></header>
-          <p className="eyebrow">Not active yet</p>
-          <p className="chain-copy">Nothing is published by this page.</p>
-          <div className="empty-state empty-state--small"><span aria-hidden="true">○</span><p>Wallet and chain verification arrive only after a real local proof exists.</p></div>
+          <OnChainVerification bundle={bundle} />
         </article>
       </div>
     </main>

@@ -1,6 +1,6 @@
 [allowlist]
 description = "EZKL key digests are public integrity metadata, not credentials."
 regexes = [
-  '''27258ef70677bf45a622b97b1d79a2b3bd3ba6f8b2669c34cebca6107b8801ec''',
-  '''79075fc44b0f031a5fc8ca924a54dabfb7ee2820425e3864147110179a38fe3c''',
+  '''9a7703fc4c7dbd0d02222ed900637df93eb5d281541b0d67ea1a4a419470c958''',
+  '''cda0597cf2b390b61e8775917877e70f30e606ac61e0b8373cbb3324c345cc2a''',
 ]

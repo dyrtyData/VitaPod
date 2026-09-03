@@ -10,9 +10,12 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@tanstack/react-query": "5.102.8",
     "@vitapod/shared": "0.1.0",
     "react": "19.1.1",
-    "react-dom": "19.1.1"
+    "react-dom": "19.1.1",
+    "viem": "2.56.3",
+    "wagmi": "2.19.5"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "6.8.0",

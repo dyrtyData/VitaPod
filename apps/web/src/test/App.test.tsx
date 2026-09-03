@@ -1,7 +1,10 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { WagmiProvider } from "wagmi";
 import App from "../App.js";
+import { wagmiConfig } from "../lib/wagmi.js";
 
 const eligible = JSON.stringify({ kind: "vitapod.synthetic-lab.v1", ageYears: 45, hba1cPercent: 6.4, egfrMlMin1_73m2: 92 });
 const ineligible = JSON.stringify({ kind: "vitapod.synthetic-lab.v1", ageYears: 45, hba1cPercent: 5.2, egfrMlMin1_73m2: 92 });
@@ -22,7 +25,16 @@ describe("App", () => {
     vi.stubGlobal("fetch", networkCall);
     vi.stubGlobal("XMLHttpRequest", requestConstructor);
     const user = userEvent.setup();
-    render(<App />);
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+    });
+    render(
+      <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
+        <QueryClientProvider client={queryClient}>
+          <App />
+        </QueryClientProvider>
+      </WagmiProvider>,
+    );
     const input = screen.getByLabelText("Choose synthetic JSON");
 
     await user.upload(input, new File([eligible], "eligible.json", { type: "application/json" }));

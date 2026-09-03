@@ -14,6 +14,8 @@ prover/artifacts/**
 # Contract deployment receipts
 contracts/deployments/**
 !contracts/deployments/.gitkeep
+contracts/artifacts/
+contracts/cache/
 
 # Build and tool caches
 dist/
