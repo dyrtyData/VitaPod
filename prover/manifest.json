@@ -19,16 +19,16 @@
   "pythonVersion": "3.11.2",
   "baseSettingsSha256": "843c5064e2cbc74073d7db512194df74bc5bebf8e3294e16cc91ad9366ae4d87",
   "srsSha256": "90807800a1c3b248a452e1732c45ee5099f38b737356f5542c0584ec9c3ebb45",
-  "compiledCircuitSha256": "978e2dcb7fa61e99932faa07155767fafd0b65c61f20747cfaf185e549f41500",
+  "compiledCircuitSha256": "5cb41da483ed191ab0378c3f775fb2286a4b5909a31f0ea96b46160c8e783f45",
   "verificationKeySha256": "79075fc44b0f031a5fc8ca924a54dabfb7ee2820425e3864147110179a38fe3c",
   "verifierSoliditySha256": "137be839404c5e59489a79d74d1e5d6be2158f8d216083052c1c4fa5ca7c4803",
   "verifierAbiSha256": "a303ee1076243655bf7c4a8614dfbc8eaf2f4dd72d339bc9909e6d34dd67ce27",
   "timingsSeconds": {
-    "setup": 5.227,
-    "proveEligible": 4.115,
-    "proveIneligible": 2.109,
-    "verifyEligible": 0.019,
-    "verifyIneligible": 0.021
+    "setup": 3.587,
+    "proveEligible": 0.83,
+    "proveIneligible": 0.846,
+    "verifyEligible": 0.014,
+    "verifyIneligible": 0.015
   },
   "provingKeySha256": "27258ef70677bf45a622b97b1d79a2b3bd3ba6f8b2669c34cebca6107b8801ec"
 }

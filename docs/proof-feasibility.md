@@ -22,11 +22,11 @@ policy is a deterministic synthetic-data demonstration, not a trained or medical
 
 | Operation | Duration |
 | --- | --- |
-| Setup | 5.227 seconds |
-| Prove (eligible) | 4.115 seconds |
-| Verify (eligible) | 0.019 seconds |
-| Prove (ineligible) | 2.109 seconds |
-| Verify (ineligible) | 0.021 seconds |
+| Setup | 3.587 seconds |
+| Prove (eligible) | 0.830 seconds |
+| Verify (eligible) | 0.014 seconds |
+| Prove (ineligible) | 0.846 seconds |
+| Verify (ineligible) | 0.015 seconds |
 
 `Setup` includes model export, boundary-fixture calibration, circuit compilation, SRS
 retrieval, key generation, and Solidity verifier generation. SRS retrieval may use a cached
