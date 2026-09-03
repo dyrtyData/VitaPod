@@ -1,0 +1,19 @@
+{
+  "arch": "aarch64",
+  "ezklVersion": "23.0.5",
+  "ezklSha256": "ec5527a9112efca22a3bec791383bf91d437d2e6f8ac9184811db3be0cf12acc",
+  "onnxVersion": "1.19.1",
+  "graphVariant": "comparisons-and",
+  "modelSha256": "abeff1e803da99eddc70b206dc297558505d43a02f91ada564ce612f59ee17ec",
+  "settingsSha256": "843c5064e2cbc74073d7db512194df74bc5bebf8e3294e16cc91ad9366ae4d87",
+  "logrows": 17,
+  "inputScale": 0,
+  "inputVisibility": "Private",
+  "outputVisibility": "Public",
+  "modelInstanceShapes": [
+    [
+      1,
+      1
+    ]
+  ]
+}

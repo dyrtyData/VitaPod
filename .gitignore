@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Environment files: only the examples are tracked
+.env
+.env.*
+!.env.example
+apps/web/.env.local
+
+# Generated proof material (model, settings, witness, keys, proofs, bundles)
+prover/artifacts/**
+!prover/artifacts/.gitkeep
+
+# Contract deployment receipts
+contracts/deployments/**
+!contracts/deployments/.gitkeep
+
+# Build and tool caches
+dist/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.DS_Store

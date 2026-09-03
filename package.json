@@ -1,0 +1,29 @@
+{
+  "name": "vitapod",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "contracts"
+  ],
+  "scripts": {
+    "lint": "eslint . && npm run typecheck --workspaces --if-present && ruff check prover",
+    "test": "npm run test --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "check:env": "python3 prover/scripts/check_environment.py",
+    "model:export": "python3 prover/scripts/export_model.py",
+    "prove:setup": "python3 prover/scripts/setup.py",
+    "prove:eligible": "python3 prover/scripts/prove.py --input prover/fixtures/eligible.json --out prover/artifacts/eligible-proof.json",
+    "prove:ineligible": "python3 prover/scripts/prove.py --input prover/fixtures/ineligible.json --out prover/artifacts/ineligible-proof.json",
+    "verify:local": "python3 prover/scripts/verify.py --bundle prover/artifacts/eligible-proof.json",
+    "test:prover": "python3 -m pytest prover/tests"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.9.1",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.69.0"
+  }
+}

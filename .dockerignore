@@ -1,0 +1,10 @@
+.git
+node_modules
+**/node_modules
+prover/artifacts
+.env
+.env.*
+!.env.example
+**/__pycache__
+.pytest_cache
+.ruff_cache

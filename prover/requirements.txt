@@ -1,0 +1,27 @@
+# Installed into /opt/prover inside the linux/arm64 image with `pip install --require-hashes`.
+# Hashes are for the CPython 3.11 / manylinux aarch64 wheels (or pure-Python wheels).
+# There is deliberately no torch: the ONNX graph is built directly with the onnx package.
+onnx==1.19.1 \
+    --hash=sha256:01b292a4d0b197c45d8184545bbc8ae1df83466341b604187c1b05902cb9c920
+numpy==2.4.6 \
+    --hash=sha256:0ab0a9c4ffb1a6d95ef519fe4247dba8eb6b18ad93999f76b7f657039acabd47
+protobuf==7.36.1 \
+    --hash=sha256:43d3d37b1eb24c113b9b7d02008cac44e423f00b611b7781ae998d7623972969
+ml_dtypes==0.6.0 \
+    --hash=sha256:7728c0420ec1c338564fc8b01015ff2d58567e70f17fedce5a0a7c0308c0d5b9
+typing_extensions==4.16.0 \
+    --hash=sha256:481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8
+
+# Test and lint tooling
+pytest==9.1.1 \
+    --hash=sha256:37a86b45efb9a47a61a36449063e8e18d0cab3161329fc099eb21783169c4f0c
+iniconfig==2.3.0 \
+    --hash=sha256:f631c04d2c48c52b84d0d0549c99ff3859c98df65b3101406327ecc7d53fbf12
+packaging==26.3 \
+    --hash=sha256:d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c
+pluggy==1.6.0 \
+    --hash=sha256:e920276dd6813095e9377c0bc5566d94c932c33b27a3e3945d8389c374dd4746
+pygments==2.21.0 \
+    --hash=sha256:2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9
+ruff==0.16.5 \
+    --hash=sha256:7b719b0a1f4d59710d283ab2965f621684a108a9e41da622e3b23f0326cd0025

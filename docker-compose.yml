@@ -1,0 +1,32 @@
+# One image, three ways to use it:
+#   docker compose run --rm tools <cmd>   one-shot commands (tests, lint, prover)
+#   docker compose up web                 Vite dev server on http://localhost:5173
+#   docker compose up chain               Hardhat JSON-RPC node on http://localhost:8545
+# The named node_modules volume keeps the image's installed dependencies from being
+# shadowed by the host's (empty) node_modules under the bind mount.
+x-base: &base
+  build: .
+  image: vitapod-toolchain
+  platform: linux/arm64
+  working_dir: /workspace
+  volumes:
+    - .:/workspace
+    - node_modules:/workspace/node_modules
+
+services:
+  tools:
+    <<: *base
+    profiles: [tools]
+  web:
+    <<: *base
+    command: npm run dev -w @vitapod/web -- --host
+    ports:
+      - "5173:5173"
+  chain:
+    <<: *base
+    command: npx hardhat node --hostname 0.0.0.0
+    ports:
+      - "8545:8545"
+
+volumes:
+  node_modules: {}
