@@ -5,8 +5,8 @@
   "onnxVersion": "1.19.1",
   "graphVariant": "comparisons-and",
   "modelSha256": "abeff1e803da99eddc70b206dc297558505d43a02f91ada564ce612f59ee17ec",
-  "settingsSha256": "843c5064e2cbc74073d7db512194df74bc5bebf8e3294e16cc91ad9366ae4d87",
-  "logrows": 17,
+  "settingsSha256": "bc333e4e877104f8c349875bf38387a628bb99afbfad70b006e938560f4256c9",
+  "logrows": 15,
   "inputScale": 0,
   "inputVisibility": "Private",
   "outputVisibility": "Public",
@@ -15,5 +15,20 @@
       1,
       1
     ]
-  ]
+  ],
+  "pythonVersion": "3.11.2",
+  "baseSettingsSha256": "843c5064e2cbc74073d7db512194df74bc5bebf8e3294e16cc91ad9366ae4d87",
+  "srsSha256": "90807800a1c3b248a452e1732c45ee5099f38b737356f5542c0584ec9c3ebb45",
+  "compiledCircuitSha256": "5c1ddc4007d19c4a748ff7fdfde724f9ae69ee614bf4e8a790318392a7dfdc7e",
+  "verificationKeySha256": "79075fc44b0f031a5fc8ca924a54dabfb7ee2820425e3864147110179a38fe3c",
+  "verifierSoliditySha256": "137be839404c5e59489a79d74d1e5d6be2158f8d216083052c1c4fa5ca7c4803",
+  "verifierAbiSha256": "a303ee1076243655bf7c4a8614dfbc8eaf2f4dd72d339bc9909e6d34dd67ce27",
+  "timingsSeconds": {
+    "setup": 2.361,
+    "proveEligible": 0.824,
+    "proveIneligible": 0.778,
+    "verifyEligible": 0.013,
+    "verifyIneligible": 0.015
+  },
+  "provingKeySha256": "27258ef70677bf45a622b97b1d79a2b3bd3ba6f8b2669c34cebca6107b8801ec"
 }

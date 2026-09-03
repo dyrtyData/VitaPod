@@ -12,3 +12,8 @@ export {
   type EligibilityResult,
   type Hex,
 } from "./policy.js";
+export {
+  ProofBundle,
+  toVerifierArguments,
+  type VerifierArguments,
+} from "./proofBundle.js";

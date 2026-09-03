@@ -83,6 +83,142 @@ def gen_settings(
     return json.loads(settings.read_text())
 
 
+def calibrate_settings(model: Path, data: Path, settings: Path) -> dict[str, Any]:
+    run(
+        "calibrate-settings",
+        "-D",
+        str(data),
+        "-M",
+        str(model),
+        "-O",
+        str(settings),
+        "--target",
+        "resources",
+        "--scales",
+        "0",
+        "--scale-rebase-multiplier",
+        "1",
+    )
+    return json.loads(settings.read_text())
+
+
+def compile_circuit(model: Path, settings: Path, compiled_circuit: Path) -> None:
+    run(
+        "compile-circuit",
+        "-M",
+        str(model),
+        "-S",
+        str(settings),
+        "--compiled-circuit",
+        str(compiled_circuit),
+    )
+
+
+def get_srs(settings: Path, srs: Path) -> None:
+    run("get-srs", "-S", str(settings), "--srs-path", str(srs))
+
+
+def setup(
+    compiled_circuit: Path,
+    srs: Path,
+    verification_key: Path,
+    proving_key: Path,
+) -> None:
+    run(
+        "setup",
+        "-M",
+        str(compiled_circuit),
+        "--srs-path",
+        str(srs),
+        "--vk-path",
+        str(verification_key),
+        "--pk-path",
+        str(proving_key),
+    )
+
+
+def create_evm_verifier(
+    settings: Path,
+    srs: Path,
+    verification_key: Path,
+    solidity: Path,
+    abi: Path,
+) -> None:
+    run(
+        "create-evm-verifier",
+        "-S",
+        str(settings),
+        "--srs-path",
+        str(srs),
+        "--vk-path",
+        str(verification_key),
+        "--sol-code-path",
+        str(solidity),
+        "--abi-path",
+        str(abi),
+    )
+
+
+def gen_witness(data: Path, compiled_circuit: Path, witness: Path) -> None:
+    run(
+        "gen-witness",
+        "-D",
+        f"@{data}",
+        "-M",
+        str(compiled_circuit),
+        "-O",
+        str(witness),
+    )
+
+
+def prove(
+    witness: Path,
+    compiled_circuit: Path,
+    proving_key: Path,
+    srs: Path,
+    proof: Path,
+) -> None:
+    run(
+        "prove",
+        "-W",
+        str(witness),
+        "-M",
+        str(compiled_circuit),
+        "--pk-path",
+        str(proving_key),
+        "--srs-path",
+        str(srs),
+        "--proof-path",
+        str(proof),
+        "--check-mode",
+        "safe",
+    )
+
+
+def verify(settings: Path, proof: Path, verification_key: Path, srs: Path) -> None:
+    run(
+        "verify",
+        "-S",
+        str(settings),
+        "--proof-path",
+        str(proof),
+        "--vk-path",
+        str(verification_key),
+        "--srs-path",
+        str(srs),
+    )
+
+
+def encode_evm_calldata(proof: Path, calldata: Path) -> None:
+    run(
+        "encode-evm-calldata",
+        "--proof-path",
+        str(proof),
+        "--calldata-path",
+        str(calldata),
+    )
+
+
 def canonical_settings_sha256(settings: dict[str, Any]) -> str:
     """Digest of the settings with run-to-run noise removed.
 

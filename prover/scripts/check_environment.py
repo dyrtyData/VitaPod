@@ -23,7 +23,7 @@ from export_model import ARTIFACTS_DIR, MODEL_PATH, export_model  # noqa: E402
 
 PROVER_DIR = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = PROVER_DIR / "manifest.json"
-SETTINGS_PATH = ARTIFACTS_DIR / "settings.json"
+ENVIRONMENT_SETTINGS_PATH = ARTIFACTS_DIR / "environment-settings.json"
 
 
 def fail(message: str) -> None:
@@ -44,22 +44,34 @@ def main() -> None:
         fail(f"ezkl binary sha256 {binary_digest} != pinned {ezkl_cli.PINNED_EZKL_SHA256}")
 
     model_digest = export_model()
-    settings = ezkl_cli.gen_settings(MODEL_PATH, SETTINGS_PATH)
+    settings = ezkl_cli.gen_settings(MODEL_PATH, ENVIRONMENT_SETTINGS_PATH)
+    settings_digest = ezkl_cli.canonical_settings_sha256(settings)
 
-    manifest = {
-        "arch": machine,
-        "ezklVersion": version,
-        "ezklSha256": binary_digest,
-        "onnxVersion": onnx.__version__,
-        "graphVariant": GRAPH_VARIANT,
-        "modelSha256": model_digest,
-        "settingsSha256": ezkl_cli.canonical_settings_sha256(settings),
-        "logrows": settings["run_args"]["logrows"],
-        "inputScale": settings["run_args"]["input_scale"],
-        "inputVisibility": settings["run_args"]["input_visibility"],
-        "outputVisibility": settings["run_args"]["output_visibility"],
-        "modelInstanceShapes": settings["model_instance_shapes"],
-    }
+    manifest = json.loads(MANIFEST_PATH.read_text()) if MANIFEST_PATH.is_file() else {}
+    has_setup = "verificationKeySha256" in manifest
+    manifest.update(
+        {
+            "arch": machine,
+            "pythonVersion": platform.python_version(),
+            "ezklVersion": version,
+            "ezklSha256": binary_digest,
+            "onnxVersion": onnx.__version__,
+            "graphVariant": GRAPH_VARIANT,
+            "modelSha256": model_digest,
+            "baseSettingsSha256": settings_digest,
+        }
+    )
+    if not has_setup:
+        manifest.update(
+            {
+                "logrows": settings["run_args"]["logrows"],
+                "inputScale": settings["run_args"]["input_scale"],
+                "inputVisibility": settings["run_args"]["input_visibility"],
+                "outputVisibility": settings["run_args"]["output_visibility"],
+                "modelInstanceShapes": settings["model_instance_shapes"],
+            }
+        )
+        manifest["settingsSha256"] = settings_digest
     MANIFEST_PATH.write_text(json.dumps(manifest, indent=2) + "\n")
     print(json.dumps(manifest, indent=2))
 

@@ -1,4 +1,8 @@
-import { evaluateDemoPolicy, type SyntheticLabRecord } from "@vitapod/shared";
+import {
+  evaluateDemoPolicy,
+  type ProofBundle as ProofBundleType,
+  type SyntheticLabRecord,
+} from "@vitapod/shared";
 import { useState } from "react";
 import { EligibilityPreview } from "./components/EligibilityPreview.js";
 import { LocalPod } from "./components/LocalPod.js";
@@ -7,6 +11,7 @@ import { ScopeNotice } from "./components/ScopeNotice.js";
 
 export default function App() {
   const [record, setRecord] = useState<SyntheticLabRecord | null>(null);
+  const [, setBundle] = useState<ProofBundleType | null>(null);
   const [error, setError] = useState<string | null>(null);
   const preview = record ? evaluateDemoPolicy(record) : null;
 
@@ -29,7 +34,7 @@ export default function App() {
         </article>
         <article className="privacy-card privacy-card--artifact">
           <header><span>02</span><h2>Local proof artifact</h2></header>
-          <ProofBundlePanel />
+          <ProofBundlePanel onBundle={setBundle} />
         </article>
         <article className="privacy-card privacy-card--chain">
           <header><span>03</span><h2>Public chain metadata</h2></header>

@@ -22,18 +22,25 @@ Python values and files.
 ```bash
 docker compose run --rm tools npm run check:env      # arch + pinned binary + gen-settings; writes prover/manifest.json
 docker compose run --rm tools npm run model:export   # writes prover/artifacts/model.onnx
+docker compose run --rm tools npm run prove:setup    # calibrate, compile, setup, and generate the Solidity verifier
+docker compose run --rm tools npm run prove:eligible # generate a real eligible proof and sanitized bundle
+docker compose run --rm tools npm run verify:local   # reconstruct and locally verify the proof from that bundle
 docker compose run --rm tools npm run test:prover    # pytest prover/tests
 ```
 
-Proof generation (`prove:setup`, `prove:eligible`, `verify:local`) is added by the next phase.
-
 ## Artifacts
 
-Everything under `prover/artifacts/` is generated and ignored by Git: `model.onnx`,
-`settings.json`, and later the compiled circuit, keys, witness, proof, and sanitized
-bundles. The private witness and proving key never leave that ignored directory.
+Everything under `prover/artifacts/` is generated and ignored by Git: the model, settings,
+compiled circuit, SRS, keys, normalized private input, witness, raw EZKL proof, encoded
+calldata, and sanitized bundles. The private input, witness, and proving key never leave
+that ignored directory.
+
+`prove:setup` writes the public generated verifier to
+`contracts/contracts/generated/Halo2Verifier.sol` with its ABI and digest manifest. The
+proof commands refresh `docs/proof-feasibility.md` from measured in-container timings.
 
 ## What the browser does with this
 
-The web app imports the sanitized proof bundle produced here as a labelled local
-artifact. It does not prove in the browser.
+The web app imports `prover/artifacts/eligible-proof.json` as a labelled local artifact.
+That bundle contains the proof and one public `0`/`1` output, but no source field, normalized
+input, witness, or proving key. The browser does not generate the proof.
