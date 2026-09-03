@@ -69,6 +69,9 @@ function safeWriteError(error: Error | null): string | null {
   }
   if (error.message.includes("NotEligible")) return "The proof output is not eligible.";
   if (error.message.includes("InvalidProof")) return "The verifier rejected this proof.";
+  if (/(UserRejectedRequest|rejected|cancelled)/i.test(error.message)) {
+    return "The wallet request was cancelled. No transaction was sent.";
+  }
   return "The wallet did not submit the proof. Review the wallet prompt and try again.";
 }
 
@@ -170,6 +173,10 @@ export function OnChainVerification({
       <p className="chain-disclosure">Testnet technical verification — not trial enrollment</p>
       {!bundle ? (
         <p className="chain-status">Generate and import a local proof bundle first.</p>
+      ) : !bundle.eligible ? (
+        <p className="chain-status chain-status--error" role="alert">
+          This bundle's public output is ineligible and cannot be submitted.
+        </p>
       ) : !resolvedChain ? (
         <p className="chain-status">No public chain configured.</p>
       ) : (

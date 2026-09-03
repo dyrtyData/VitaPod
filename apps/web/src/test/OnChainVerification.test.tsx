@@ -53,6 +53,11 @@ const bundle = {
   proof: "0x0102" as const,
   instances: ["1"],
 };
+const ineligibleBundle = {
+  ...bundle,
+  eligible: false,
+  instances: ["0"],
+};
 const chainConfig = {
   chain: defineChain({
     id: 31337,
@@ -96,6 +101,16 @@ describe("OnChainVerification", () => {
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 
+  it("refuses an imported ineligible bundle before wallet interaction", () => {
+    render(<OnChainVerification bundle={ineligibleBundle} chainConfig={chainConfig} />);
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "This bundle's public output is ineligible and cannot be submitted.",
+    );
+    expect(screen.queryByRole("button", { name: "Submit proof" })).not.toBeInTheDocument();
+    expect(hooks.writeContract).not.toHaveBeenCalled();
+  });
+
   it("refuses a wrong chain without sending or switching", async () => {
     hooks.account.chainId = 1;
     render(<OnChainVerification bundle={bundle} chainConfig={chainConfig} />);
@@ -107,7 +122,15 @@ describe("OnChainVerification", () => {
     expect(hooks.writeContract).not.toHaveBeenCalled();
   });
 
-  it("shows a pending transaction hash without proof inputs", () => {
+  it("shows wallet-signature pending before a transaction hash exists", () => {
+    hooks.writePending = true;
+    render(<OnChainVerification bundle={bundle} chainConfig={chainConfig} />);
+
+    expect(screen.getByRole("button", { name: "Confirm in wallet" })).toBeDisabled();
+    expect(screen.queryByText(/Pending:/)).not.toBeInTheDocument();
+  });
+
+  it("shows a broadcast transaction hash without proof inputs", () => {
     hooks.writeData = transactionHash;
     hooks.receipt.isLoading = true;
     render(<OnChainVerification bundle={bundle} chainConfig={chainConfig} />);
@@ -170,6 +193,24 @@ describe("OnChainVerification", () => {
     render(<OnChainVerification bundle={bundle} chainConfig={chainConfig} />);
 
     expect(screen.getByRole("alert")).toHaveTextContent("This proof was already used.");
+    expect(screen.queryByText("0x0102")).not.toBeInTheDocument();
+  });
+
+  it("maps wallet-acceptance and cancelled-request failures safely below the action", () => {
+    hooks.writeError = new Error("ContractFunctionRevertedError: WalletAlreadyAccepted()");
+    const { rerender } = render(<OnChainVerification bundle={bundle} chainConfig={chainConfig} />);
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "This wallet has already accepted this trial demonstration.",
+    );
+    expect(screen.getByRole("button", { name: "Submit proof" })).toBeInTheDocument();
+
+    hooks.writeError = new Error("UserRejectedRequestError: User rejected the request.");
+    rerender(<OnChainVerification bundle={bundle} chainConfig={chainConfig} />);
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "The wallet request was cancelled. No transaction was sent.",
+    );
     expect(screen.queryByText("0x0102")).not.toBeInTheDocument();
   });
 });
