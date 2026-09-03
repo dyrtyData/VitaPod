@@ -16,16 +16,16 @@ policy is a deterministic synthetic-data demonstration, not a trained or medical
 | Graph | `comparisons-and` |
 | Model SHA-256 | `abeff1e803da99eddc70b206dc297558505d43a02f91ada564ce612f59ee17ec` |
 | Settings SHA-256 | `bc333e4e877104f8c349875bf38387a628bb99afbfad70b006e938560f4256c9` |
-| Verification-key SHA-256 | `79075fc44b0f031a5fc8ca924a54dabfb7ee2820425e3864147110179a38fe3c` |
+| Verification-key SHA-256 | `cda0597cf2b390b61e8775917877e70f30e606ac61e0b8373cbb3324c345cc2a` |
 
 ## Measured pipeline
 
 | Operation | Duration |
 | --- | --- |
-| Setup | 3.587 seconds |
-| Prove (eligible) | 0.830 seconds |
+| Setup | 2.450 seconds |
+| Prove (eligible) | 0.819 seconds |
 | Verify (eligible) | 0.014 seconds |
-| Prove (ineligible) | 0.846 seconds |
+| Prove (ineligible) | 0.835 seconds |
 | Verify (ineligible) | 0.015 seconds |
 
 `Setup` includes model export, boundary-fixture calibration, circuit compilation, SRS

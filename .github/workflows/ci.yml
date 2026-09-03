@@ -1,0 +1,20 @@
+name: VitaPod CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  demo-smoke:
+    runs-on: ubuntu-24.04-arm
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and verify the reproducible demo
+        run: bash scripts/demo-smoke.sh
+      - name: Upload proof feasibility evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: proof-feasibility
+          path: docs/proof-feasibility.md

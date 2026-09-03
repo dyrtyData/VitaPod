@@ -21,7 +21,9 @@
     "test:prover": "python3 -m pytest prover/tests",
     "chain:deploy:local": "npm run deploy -w @vitapod/contracts -- --network localhost",
     "chain:state:local": "npm run state -w @vitapod/contracts -- --network localhost",
-    "test:contracts": "npm run test -w @vitapod/contracts"
+    "test:contracts": "npm run test -w @vitapod/contracts",
+    "check:no-phi": "node scripts/check-no-phi.mjs",
+    "test:check:no-phi": "node scripts/check-no-phi.test.mjs"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

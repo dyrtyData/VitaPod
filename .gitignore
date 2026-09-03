@@ -24,3 +24,4 @@ __pycache__/
 .ruff_cache/
 graphify-out/
 .DS_Store
+demo-notes.md
