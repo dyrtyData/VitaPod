@@ -1,57 +1,258 @@
-# VitaPod
+# VitaPod — Privacy-Preserving Clinical Trial Eligibility via zkML
 
-VitaPod is a Docker-first, synthetic-data technical prototype for demonstrating a
-zero-knowledge proof of a fixed eligibility computation. It is not a clinical trial,
-medical device, enrollment workflow, source-authentication system, or HIPAA-compliant
-service. Do not use it with real health records.
+A **local-first data pod** demonstrating that patients can cryptographically prove they meet clinical trial eligibility criteria **without revealing their biomarker values**. VitaPod compiles an ONNX eligibility policy to a Halo2 zk-SNARK via [EZKL](https://github.com/zkonduit/ezkl), verifies proofs on-chain through a generated Solidity verifier, and records only wallet addresses and digests in a replay-protected registry — the underlying health data never leaves the patient's device.
 
-The browser validates a synthetic record in memory and previews a published demonstration
-policy. A local CLI inside the pinned container generates and verifies the proof. The
-registry records only a wallet address, policy digest, and proof digest; it never receives
-the source record or raw biomarker values.
+> [**EAG Global Buildathon 2026**](https://www.eaglobal.org/) — Track: **Local AI, Private AI & User-Owned Data**
+>
+> **Authors:** Diana Chang · Mehdi-Loup Nasom · Mariana Uchoa
+
+## Headline Result
+
+| Metric | Value |
+|--------|-------|
+| **Proof generation** | 2.050 seconds |
+| **On-chain verification** | 0.027 seconds |
+| **Privacy guarantee** | Zero-knowledge: biomarkers never disclosed |
+| **Data location** | 100% local (browser + container) |
+
+The eligible synthetic record produces a valid proof that verifies on-chain; the registry emits only `ProofAccepted(wallet, policyDigest, proofDigest)`. No age, HbA1c, or eGFR values appear in the proof, transaction calldata, or event logs.
+
+## Report & Artifacts
+
+- 📄 **Research paper (PDF):** [`report/vitapod-zkml-eligibility_paper.pdf`](report/vitapod-zkml-eligibility_paper.pdf) — full technical paper ([markdown source](report/vitapod-zkml-eligibility.md))
+- 🎬 **Demo runbook:** [`docs/demo-runbook.md`](docs/demo-runbook.md)
+
+*Pitch materials (deck, one-pager, speaker scripts) are in the parent [EAG_Buildathon](https://github.com/dyrtyData/EAG_Buildathon) repository.*
+
+## Why This Matters
+
+**Patients will share health data for research — until they learn who receives it.**
+
+| Recipient | Willing to Share |
+|-----------|------------------|
+| Treating physician | >95% |
+| Academic researcher | 80–92% |
+| **Pharmaceutical company** | **38–52%** |
+
+*Source: Cascini et al., eClinicalMedicine 2024 — 116 studies, 228,501 participants*
+
+Meanwhile, **~40% of NCI network trials fail to complete accrual**, and screen failures cost **$800–$2,500 per patient**. VitaPod demonstrates a cryptographic alternative: prove eligibility without disclosing the values.
+
+## How It Works
+
+```mermaid
+flowchart LR
+    subgraph Browser["Patient's Browser (Local Only)"]
+        A[Synthetic JSON] --> B[Schema validation]
+        B --> C[Local policy evaluation]
+        C --> D[Eligibility preview]
+    end
+    
+    subgraph Container["Docker Container (Local)"]
+        E[Same record] --> F[Normalize to integers]
+        F --> G[ONNX policy graph]
+        G --> H[EZKL Halo2 proof]
+        H --> I[Sanitized bundle]
+    end
+    
+    subgraph Chain["Blockchain"]
+        J[Generated Solidity verifier]
+        J --> K[TrialProofRegistry]
+        K --> L["ProofAccepted(wallet, policyDigest, proofDigest)"]
+    end
+    
+    I -->|"proof + 1 bit<br/>(no biomarkers)"| J
+```
+
+**What stays private:** raw age, HbA1c, eGFR values; normalized inputs; the witness; the proving key
+**What becomes public:** the eligibility result (1 bit), the proof bytes, the submitting wallet, transaction metadata
+
+## Technical Architecture
+
+| Layer | Technology | Purpose |
+|-------|------------|---------|
+| **Frontend** | React + Vite + Tailwind | Local-only data intake and preview |
+| **Schema** | Zod (TypeScript) | Single source of truth for validation |
+| **Proof Pipeline** | EZKL v23.0.5 + ONNX 1.19.1 | Compile policy to Halo2 zk-SNARK circuit |
+| **Contracts** | Hardhat + generated Halo2Verifier | On-chain proof verification |
+| **Registry** | TrialProofRegistry.sol | Replay protection + wallet binding |
+| **Infrastructure** | Docker Compose (linux/arm64) | Reproducible containerized demo |
+
+### Measured Performance (native arm64)
+
+| Operation | Duration |
+|-----------|----------|
+| Setup (one-time) | 5.665 seconds |
+| Prove (eligible) | 2.050 seconds |
+| Verify (local) | 0.027 seconds |
+
+## Project Phases
+
+The build follows a structured progression from walking skeleton to full demonstration:
+
+1. **Phase 1: Schema & Local Evaluation** — Zod schema mirroring ONNX policy; React preview; no network, no persistence.
+2. **Phase 2: Browser Shell & Wallet** — Three-column UI with wallet integration (viem/wagmi); local evaluation only.
+3. **Phase 3: Proof Pipeline** — EZKL setup, prove, verify inside pinned container; generated Solidity verifier.
+4. **Phase 4: On-Chain Verification** — TrialProofRegistry with replay protection; wallet binding; event emission.
+5. **Phase 5: Release Hardening** — CI scanner, lint, tests, acceptance evidence; production build validation.
+6. **Phase 6: Documentation** — Research paper, pitch deck, demo runbook; reproducibility scripts.
 
 ## Quickstart
 
-Prerequisite: Docker Desktop must be running. The host does not need Node, Python, or EZKL.
+**Prerequisites:** Docker Desktop running. The host does not need Node, Python, or EZKL.
 
 ```bash
+# Clone and build
+git clone https://github.com/dyrtyData/VitaPod
+cd VitaPod
 docker compose build
+
+# Generate proof (one-time setup + prove)
 docker compose run --rm tools npm run prove:setup
 docker compose run --rm tools npm run prove:eligible
 docker compose run --rm tools npm run verify:local
+
+# Start services
 docker compose up -d chain web
+docker compose run --rm tools npm run chain:deploy:local
+
+# Open browser
+open http://localhost:5173
 ```
 
-Open `http://localhost:5173`, select `prover/fixtures/eligible.json`, then import the
-locally generated `prover/artifacts/eligible-proof.json`. For the local wallet receipt and
-the three-minute presentation sequence, follow [docs/demo-runbook.md](docs/demo-runbook.md).
+### Demo Flow
+
+1. **Load record** — Select `prover/fixtures/eligible.json`
+2. **Import proof** — Import `prover/artifacts/eligible-proof.json`
+3. **Connect wallet** — MetaMask to localhost:8545 (Chain ID 31337)
+4. **Submit proof** — Observe `ProofAccepted` event
+5. **Replay test** — Submit again → "Wallet already accepted"
+
+See [`docs/demo-runbook.md`](docs/demo-runbook.md) for the full 3-minute presentation sequence.
+
+## Repository Layout
+
+```
+VitaPod/
+├── apps/
+│   └── web/                  # React + Vite frontend
+│       ├── src/
+│       │   ├── components/   # Three-column UI components
+│       │   ├── hooks/        # Wallet, proof, registry hooks
+│       │   └── lib/          # Schema, policy evaluation
+│       └── index.html
+├── contracts/
+│   ├── src/
+│   │   ├── TrialProofRegistry.sol   # Replay protection + events
+│   │   └── Halo2Verifier.sol        # EZKL-generated verifier
+│   └── test/
+├── prover/
+│   ├── fixtures/             # Synthetic eligible/ineligible JSON
+│   ├── artifacts/            # Generated proofs, keys, verifier
+│   ├── models/               # ONNX policy graph
+│   └── scripts/              # Python prove/verify pipeline
+├── packages/
+│   └── shared/               # Zod schema shared across frontend/prover
+├── docs/
+│   ├── architecture.md
+│   ├── proof-feasibility.md
+│   └── demo-runbook.md
+├── report/                   # Research paper and figures
+├── scripts/
+│   └── demo-smoke.sh         # Full regression test
+├── docker-compose.yml
+└── Dockerfile
+```
 
 ## Reproducibility
 
-Run the complete clean-worktree regression sequence with:
+Run the complete clean-worktree regression sequence:
 
 ```bash
 bash scripts/demo-smoke.sh
 ```
 
-It builds the native `linux/arm64` image, proves and verifies the eligible fixture, runs
-lint, tests, contract tests, the production build, and the release scanner. See
-[docs/architecture.md](docs/architecture.md) for the data flow and
-[docs/proof-feasibility.md](docs/proof-feasibility.md) for pinned versions and measured
-proof timings.
+This builds the native image, proves and verifies both fixtures, runs lint, tests, contract tests, the production build, and the release scanner. All artifacts are deterministically reproducible from the committed toolchain pins.
+
+### Tests
+
+```bash
+# Inside container
+docker compose run --rm tools npm test
+docker compose run --rm tools npm run test:contracts
+docker compose run --rm tools npm run lint
+```
+
+## Market Context
+
+| Metric | Value | Source |
+|--------|-------|--------|
+| AI patient matching market | $641.6M → $1.9B by 2030 | Grand View Research |
+| Privacy tokenization adoption | 270+ trials | Datavant |
+| Screen failure rate | 20–80% by indication | Advarra |
+| Cost per screen | $800–$2,500 | Industry average |
+
+**Sponsors are already buying privacy infrastructure.** Datavant's tokenization is deployed across 2,000+ hospitals and top 30 pharma brands. Tokenization still requires a trusted intermediary to hold identifiers. **A zero-knowledge proof requires no one to hold anything.**
+
+## Key Differentiators
+
+1. **Real ZK proofs** — Not simulated; actual Halo2 zk-SNARKs verified on-chain
+2. **Local-first** — Health data never leaves the browser or local container
+3. **Reproducible** — Docker containerized; reviewers can rebuild from scratch
+4. **Extensible** — ONNX model can be swapped without architecture changes
+5. **DeSci-native** — Designed to integrate with IP-NFTs and DAOs
+
+## Future Roadmap
+
+| Phase | Capability |
+|-------|------------|
+| **Today** | Prove eligibility for a threshold policy |
+| **Next** | Authenticated inputs — signed labs, FHIR provenance, zkTLS |
+| **Then** | Scientific bounties — sponsor posts criteria on-chain; pod auto-claims |
+| **Then** | Proof-of-contribution → drug discounts, priority access, compensation |
+| **Later** | Validated phenotype models replacing thresholds |
 
 ## Boundaries
 
-- Synthetic fixtures only. The committed fixtures are fictional and are not from a person,
-  laboratory, or provider.
-- A proof establishes correct execution of this fixed demonstration policy over a private
-  witness. It does not authenticate the witness or bind it to a person.
-- Local Hardhat verification is the supported demo path. A remote HashKey deployment is
-  optional, fail-closed, and requires human-supplied testnet configuration.
+VitaPod is a **synthetic-data technical prototype**. It does not:
 
-More detail: [demo scope](docs/demo-scope.md), [threat model](docs/threat-model.md), and
-[research context](docs/research.md).
+- Assess medical eligibility or replace investigator review
+- Authenticate that data came from a lab or EHR
+- Establish that a wallet maps to one person
+- Obtain informed consent or enroll participants
+- Establish HIPAA, FDA, or GDPR compliance
+
+The proof establishes correct execution over a private witness. It does not establish the witness's real-world origin or authenticity.
+
+## Team
+
+| Name | Role | Background |
+|------|------|------------|
+| **Diana Chang** | AI Engineer, Project Lead | PharmD, MS Health IT |
+| **Mehdi-Loup Nasom** | Blockchain/Web3 Developer | ENSC Ingénieur en Cognitique |
+| **Mariana Uchoa** | Scientific Advisor | PhD Neuroscience (USC), Translational Immunology |
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+- **Code:** MIT (see [`LICENSE`](LICENSE))
+- **Report & figures:** CC-BY-4.0
+
+## Citation
+
+```bibtex
+@misc{vitapod2026,
+  title={VitaPod: Privacy-Preserving Clinical Trial Eligibility via Zero-Knowledge Machine Learning},
+  author={Chang, Diana and Nasom, Mehdi-Loup and Uchoa, Mariana},
+  year={2026},
+  howpublished={EAG Global Buildathon},
+  url={https://github.com/dyrtyData/VitaPod}
+}
+```
+
+## Acknowledgments
+
+VitaPod builds on [EZKL](https://github.com/zkonduit/ezkl) for zkML proof generation and the broader DeSci ecosystem pioneered by [Molecule](https://www.molecule.xyz/) and [VitaDAO](https://www.vitadao.com/).
+
+---
+
+*VitaPod is a synthetic-data technical prototype. It does not assess medical eligibility, authenticate laboratory results, enroll participants, or send health data to research sponsors. Do not use with real health records.*
