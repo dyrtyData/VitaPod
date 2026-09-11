@@ -34,12 +34,12 @@
 
 ## Contingencies
 
-- If no testnet is available, present the local Hardhat receipt as an offline technical
-  fallback, never as a live testnet transaction.
+- **Local Hardhat is the primary path for the live, timed demo — this is a deliberate choice, not a fallback.** The registry and verifier are also deployed and source-verified on HashKey Chain Testnet (chain 133; see `README.md` → Live Deployment), but the live click-through should run against localhost. A public RPC call has failure modes a local Hardhat node doesn't (latency, rate limiting, brief downtime) that you cannot control or predict during a strict 3-minute clock. Mention or show the testnet explorer as corroborating evidence — after the timed showcase, or as an aside — rather than depending on it for the click-through itself.
 - A rehearsal consumes a proof and wallet acceptance by design. Restart the local chain and
   redeploy, or generate a fresh proof and use an unused local account.
-- An optional remote deployment requires human-supplied values only in ignored
-  `contracts/.env`; run `checkNetwork.ts` first and do not request or record credentials.
+- The optional remote deployment already exists (see Live Deployment in `README.md`); if you
+  do want to demo against it directly, human-supplied values live only in ignored
+  `contracts/.env` — run `checkNetwork.ts` first and do not request or record credentials.
 
 After the runbook, a novice should be able to say that the proof establishes correct execution
 of a fixed computation over a private synthetic input, not lab provenance, enrollment, or

@@ -187,6 +187,10 @@ function submit(...) external {
 
 A second submission from the same wallet reverts with "Wallet already accepted."
 
+### 4.4 Public Testnet Deployment
+
+Beyond the local Hardhat validation above, the identical registry and verifier were deployed to **HashKey Chain Testnet** (chain ID 133) at `0x22ec2ee3c88632f5a9c03afc74cb4027a54255ab` (verifier) and `0xe4a8412d544cf515eb869164855f24bc4d4fefd9` (registry). Correctness was confirmed independently via raw RPC calls rather than trusting the deployment script's own output: deployed bytecode size matches the compiled artifact at both addresses; `registry.verifier()` resolves to the deployed verifier; `registry.policyDigest()` equals `keccak256("vitapod-demo-metabolic-v1")`; and a real committed proof bundle (`eligible-proof.json`, EZKL v23.0.5) was simulated against `submit()` via `eth_call`, returning accepted at 648,593 gas. This demonstrates the Halo2 verification logic executes correctly on a public chain, not only against a local development node. The deployment used the publicly known Hardhat test account #1, funded with a small amount of testnet HSK for this purpose; mainnet (chain ID 177) was not touched. Both contracts were subsequently source-verified on the Blockscout explorer (`is_fully_verified: true`, `solc v0.8.28+commit.7893614a`, optimizer 200 runs, `cancun` EVM target); the verified source returned by the explorer was independently re-hashed and matches the committed source files byte-for-byte (`Halo2Verifier.sol` SHA-256 `271d1c26…`, `TrialProofRegistry.sol` SHA-256 `857f93d8…`), confirming the deployed bytecode, the explorer-verified source, and the repository's committed source are provably identical.
+
 ## 5. Discussion
 
 ### 5.1 Implications for Clinical Trial Privacy
