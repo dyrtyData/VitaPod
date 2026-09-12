@@ -61,10 +61,14 @@ The local Hardhat path (chain `31337`) below remains the primary, network-indepe
 
 - 📄 **Research paper (PDF):** [`report/vitapod-zkml-eligibility_paper.pdf`](report/vitapod-zkml-eligibility_paper.pdf) — full technical paper ([markdown source](report/vitapod-zkml-eligibility.md))
 - 📊 **Pitch deck:** [`pitch/VitaPod_Pitch.pptx`](pitch/VitaPod_Pitch.pptx) — 19 slides, with per-slide speaker notes (live script + background/sources/Q&A)
-- 🎬 **Live demo recording:** [`pitch/technical_demo.mp4`](pitch/technical_demo.mp4)
-- 🎬 **Demo runbook:** [`docs/demo-runbook.md`](docs/demo-runbook.md)
+- 🎬 **Live demo recording:** [`pitch/technical_demo.mp4`](pitch/technical_demo.mp4) — the actual screen-recorded technical walkthrough of the working prototype
+- 🎬 **Demo runbook:** [`docs/demo-runbook.md`](docs/demo-runbook.md) — reproduce the live demo yourself
+- 🎥 **Video overview:** [share link](https://notebook.google.com/notebook/53c3fbab-e650-4b02-9a18-7c455a187d63/artifact/391c2d31-1336-4988-8271-aba064cdb889)
+- 🖼️ **Architecture infographic:** [`report/artifacts/VitaPod_Privacy-Preserving_Clinical_Trials_Architecture_Infographic.png`](report/artifacts/VitaPod_Privacy-Preserving_Clinical_Trials_Architecture_Infographic.png)
+- 🗺️ **Architecture mind map:** [`report/artifacts/VitaPod Mind Map.png`](report/artifacts/VitaPod%20Mind%20Map.png)
+- 🖥️ **Visual architecture deck:** [`report/artifacts/VitaPod_zkML_Architecture.pdf`](report/artifacts/VitaPod_zkML_Architecture.pdf) — a 15-slide companion deck
 
-*Additional pitch material (one-pager, speaker scripts, market-research notes) is in the parent [EAG_Buildathon](https://github.com/dyrtyData/EAG_Buildathon) repository, which stays private — the deck and demo video above are the versions judges can actually reach.*
+*Additional pitch material (one-pager, speaker scripts, market-research notes) is in the parent [EAG_Buildathon](https://github.com/dyrtyData/EAG_Buildathon) repository, which stays private — the deck and artifacts above are the versions judges can actually reach.*
 
 ## Why This Matters
 
@@ -199,8 +203,9 @@ VitaPod/
 │   ├── architecture.md
 │   ├── proof-feasibility.md
 │   └── demo-runbook.md
-├── report/                   # Research paper and figures
-├── pitch/                    # Pitch deck (.pptx) and live-demo recording
+├── report/                   # Research paper, figures, and NotebookLM-generated artifacts
+│   └── artifacts/            # Infographic, mind map, visual architecture deck
+├── pitch/                    # Pitch deck (.pptx) and live-demo recording (.mp4)
 ├── scripts/
 │   └── demo-smoke.sh         # Full regression test
 ├── docker-compose.yml
