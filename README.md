@@ -2,7 +2,7 @@
 
 A **local-first data pod** demonstrating that patients can cryptographically prove they meet clinical trial eligibility criteria **without revealing their biomarker values**. VitaPod compiles an ONNX eligibility policy to a Halo2 zk-SNARK via [EZKL](https://github.com/zkonduit/ezkl), verifies proofs on-chain through a generated Solidity verifier, and records only wallet addresses and digests in a replay-protected registry — the underlying health data never leaves the patient's device.
 
-> [**EAG Global Buildathon 2026**](https://www.eaglobal.org/) — Track: **Local AI, Private AI & User-Owned Data**
+> [**EAG Global Buildathon 2026**](https://eag-global-buildathon.devfolio.co/) — Track: **Local AI, Private AI & User-Owned Data**
 >
 > **Authors:** Diana Chang · Mehdi-Loup Nasom · Mariana Uchoa
 
